@@ -59,6 +59,7 @@ export const ConvoSchema: Schema<IConvoDocument> = new Schema(
             transform(_doc, ret) {
                 ret.id = ret._id;
                 delete ret.__v;
+                delete ret._id;
             },
         },
     },
