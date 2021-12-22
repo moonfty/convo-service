@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 export interface IConvo {
+    id: string;
     user: string;
     text: string;
     moon: number;

@@ -9,17 +9,23 @@ import { ConvoModule } from '../convo.module';
 import { ConvoController } from '../convo.controller';
 import { ConvoService } from '../convo.service';
 import { CreateConvoDto } from '../dtos/convo.dto';
+import CommentModel from '../models/comment.model';
+import { CommentService } from '../services/comment.service';
+import { CommentController } from '../controllers/comment.controller';
+import { CreateCommentDto } from '../dtos/comment.dto';
+import ConvoModel, { IConvo } from '../models/convo.model';
 
 const mongod = new MongoMemoryServer();
 
-describe('Convo Service E2E Tests', () => {
+describe('Comment Service E2E Tests', () => {
     var app: INestApplication;
-    const baseUrl = '/convo';
+    let saved_convo: IConvo;
+    const baseUrl = '/comment';
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [
-                ConvoModule,
+                CommentModel,
                 MongooseModule.forRootAsync({
                     useFactory: async () => {
                         const uri = await mongod.getUri();
@@ -29,20 +35,29 @@ describe('Convo Service E2E Tests', () => {
                     },
                 }),
             ],
-            controllers: [ConvoController],
-            providers: [ConvoService],
+            controllers: [CommentController],
+            providers: [CommentService],
         }).compile();
 
         app = moduleRef.createNestApplication();
         const uri = await mongod.getUri();
         await mongoose.connect(uri);
         await app.init();
-    });
 
-    it('POST /convo', async () => {
+        //Seed Convo Data
         const data: CreateConvoDto = {
             user: '123',
-            text: 'New Convo test',
+            text: 'Test Convo Data',
+        };
+        const created_convo = await ConvoModel.create(data);
+        saved_convo = await created_convo.save();
+    });
+
+    it('POST /comment', async () => {
+        const data: CreateCommentDto = {
+            convo: saved_convo.id,
+            user: '124',
+            text: 'Nice convo test',
         };
 
         for (var i = 0; i < 15; i++) {
@@ -53,17 +68,17 @@ describe('Convo Service E2E Tests', () => {
         }
     });
 
-    it('GET /convo/page/:page', async () => {
+    it('GET /comment/:id/page/:page', async () => {
         const response = await request(app.getHttpServer())
-            .get(baseUrl + '/page/0')
+            .get(baseUrl + '/' + saved_convo.id + '/page/0')
             .expect(200);
         const res_data = response.body.data;
         expect(res_data.length).toBe(10);
     });
 
-    it('GET /convo/page/:page', async () => {
+    it('GET /comment/:id/page/:page', async () => {
         const response = await request(app.getHttpServer())
-            .get(baseUrl + '/page/1')
+            .get(baseUrl + '/' + saved_convo.id + '/page/1')
             .expect(200);
         const res_data = response.body.data;
         expect(res_data.length).toBe(5);
