@@ -42,3 +42,4 @@ devdb
 .env
 
 baumeta-onthemoon-firebase-adminsdk-c43jf-ae54c77578.json
+__pycache__
