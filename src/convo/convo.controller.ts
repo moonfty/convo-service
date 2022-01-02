@@ -7,9 +7,11 @@ import {
     Param,
     Patch,
     Post,
+    Res,
     UseInterceptors,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { ConvoService } from './convo.service';
 import { CreateConvoDto } from './dtos/convo.dto';
 import {
@@ -22,7 +24,7 @@ import {
     ResponseFormatDto,
     TransformInterceptor,
 } from './interceptors/transfrom.interceptor';
-import { IConvo } from './models/convo.model';
+import { IConvo } from './models/convo/convo.model';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -57,6 +59,19 @@ export class ConvoController {
         try {
             const events = await this.convoService.getDataWithPagination(page);
             return events;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @ApiResponse({ status: 200, type: ResponseFormatDto })
+    @Delete(':id')
+    async delete(
+        @Param('id') id: string,
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<IConvo> {
+        try {
+            return await this.convoService.delete(id, res.locals.user);
         } catch (error) {
             throw error;
         }
