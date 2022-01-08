@@ -25,8 +25,8 @@ export class ConvoService extends Service implements IAnalyticService {
         this.analyticService = new AnalyticService(ConvoModel, '');
     }
 
-    async updateMoon(id: string, user: string, up: boolean): Promise<any> {
-        return await this.analyticService.updateMoon(id, user, up);
+    async updateMoon(id: string, up: boolean): Promise<any> {
+        return await this.analyticService.updateMoon(id, up);
     }
 
     async searchRelevantResultsWithPagination(data: SearchPaginationDto) {

@@ -4,13 +4,13 @@ import { errorMessages } from '../errors/convo.errors';
 import ConvoModel, { IConvoDocument } from '../models/convo/convo.model';
 
 export interface IAnalyticService {
-    updateMoon(id: string, user: string, up: boolean): Promise<any>;
+    updateMoon(id: string, up: boolean): Promise<any>;
 }
 
 export class AnalyticService implements IAnalyticService {
     constructor(public model: Model<any>, public parent?: string) {}
 
-    private async findData(id: string, user: any) {
+    private async findData(id: string) {
         const data = await this.model.findById(id);
         if (!data) {
             throw new NotFoundException(errorMessages.NOT_FOUND_ERROR);
@@ -18,8 +18,8 @@ export class AnalyticService implements IAnalyticService {
         return data;
     }
 
-    async updateMoon(id: string, user: any, up: boolean) {
-        const data = await this.findData(id, user);
+    async updateMoon(id: string, up: boolean) {
+        const data = await this.findData(id);
 
         //Update Moon count of data
         if (up === true) {

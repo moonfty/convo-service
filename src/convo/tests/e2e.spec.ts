@@ -32,6 +32,6 @@ describe('E2E Tests', () => {
             .get(commentUrl + '/' + convo_id + '/page/0')
             .expect(200);
 
-        //console.log(response.body.data);
+        console.log(response.body.data);
     });
 });

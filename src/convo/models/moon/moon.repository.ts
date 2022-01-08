@@ -16,7 +16,7 @@ export class MoonRepository {
         let commentResponseList: Array<ICommentResponse> = [];
         for (var comment of data) {
             const moondetail = await MoonModel.findOne({
-                user: comment.user,
+                user: '123',
                 comment: comment.id,
             });
             var commentResponse: ICommentResponse = {

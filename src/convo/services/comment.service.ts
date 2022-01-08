@@ -16,7 +16,7 @@ export class CommentService extends Service implements IAnalyticService {
         this.analyticService = new AnalyticService(CommentModel, '');
     }
 
-    async updateMoon(id: string, user: string, up: boolean): Promise<any> {
-        return await this.analyticService.updateMoon(id, user, up);
+    async updateMoon(id: string, up: boolean): Promise<any> {
+        return await this.analyticService.updateMoon(id, up);
     }
 }
