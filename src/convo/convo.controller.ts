@@ -14,6 +14,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ConvoService } from './convo.service';
 import { CreateConvoDto } from './dtos/convo.dto';
+import { SearchPaginationDto } from './dtos/search.dto';
 import {
     NotFoundSwaggerSchema,
     BadRequestSwaggerSchema,
@@ -57,8 +58,26 @@ export class ConvoController {
         @Param('page') page: number,
     ): Promise<Array<IConvo>> {
         try {
-            const events = await this.convoService.getDataWithPagination(page);
-            return events;
+            const convos = await this.convoService.getDataWithPagination(page);
+            return convos;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @ApiResponse({ status: 200, type: ResponseFormatDto })
+    @Get('search/:text/page/:page')
+    async getSearchWithPagination(
+        @Param('search') text: string,
+        @Param('page') page: number = 0,
+    ): Promise<Array<IConvo>> {
+        try {
+            const data: SearchPaginationDto = { text: text, page: page };
+            const convos =
+                await this.convoService.searchRelevantResultsWithPagination(
+                    data,
+                );
+            return convos;
         } catch (error) {
             throw error;
         }

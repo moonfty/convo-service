@@ -21,5 +21,23 @@ export class ConvoRepository {
         return data;
     }
 
-    static async getHotConvoResultsWithPagination(text: string, page) {}
+    /*
+    static async getHotConvoResultsWithPagination(page) {
+        const query_options = {
+            skip: page * 10,
+            limit: 10,
+            sort: { rank: { $meta: 'textScore' } },
+        };
+
+        const current_time = new Date().getTime()
+        
+        const data = await ConvoModel.find(
+            {},
+            { rank:  },
+            query_options,
+        );
+
+        return data;
+    }
+    */
 }

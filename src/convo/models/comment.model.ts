@@ -1,8 +1,9 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, ObjectId } from 'mongoose';
+import * as mongoose from 'mongoose';
 
 export interface IComment {
-    id: string;
-    convo: string;
+    id: mongoose.Types.ObjectId;
+    convo: mongoose.Types.ObjectId;
     user: string;
     text: string;
     moon: number;
@@ -20,7 +21,7 @@ export interface ICommentDocument extends IComment, Document {}
 
 export const CommentSchema: Schema<ICommentDocument> = new Schema(
     {
-        convo: { type: String, ref: 'Convo' },
+        convo: { type: Schema.Types.ObjectId, ref: 'Convo', index: true },
         user: { type: String, required: true },
         text: { type: String, required: true },
         moon: { type: Number, required: true, default: 0 },
@@ -44,5 +45,6 @@ export const CommentSchema: Schema<ICommentDocument> = new Schema(
 );
 
 const CommentModel = model<ICommentDocument>('Comment', CommentSchema);
+CommentModel.createIndexes();
 
 export default CommentModel;

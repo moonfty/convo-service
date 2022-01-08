@@ -1,7 +1,8 @@
-import { IComment } from '../models/comment.model';
+import { ObjectId } from 'mongoose';
+import * as mongoose from 'mongoose';
 
 export class CreateChildCommentDto {
-    parent: string;
+    parent: mongoose.Types.ObjectId;
     user: string;
     text: string;
 }

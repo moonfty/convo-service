@@ -13,7 +13,7 @@ import CommentModel from '../models/comment.model';
 import { CommentService } from '../services/comment.service';
 import { CommentController } from '../controllers/comment.controller';
 import { CreateCommentDto } from '../dtos/comment.dto';
-import ConvoModel, { IConvo } from '../models/convo.model';
+import ConvoModel, { IConvo } from '../models/convo/convo.model';
 
 const mongod = new MongoMemoryServer();
 

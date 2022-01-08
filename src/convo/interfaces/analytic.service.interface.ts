@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Query } from 'mongoose';
 import { errorMessages } from '../errors/convo.errors';
+import ConvoModel, { IConvoDocument } from '../models/convo/convo.model';
 
 export interface IAnalyticService {
-    upMoon(id: string, user: string): Promise<any>;
-    downMoon(id: string, user: string): Promise<any>;
+    updateMoon(id: string, user: string, up: boolean): Promise<any>;
 }
 
 export class AnalyticService implements IAnalyticService {
@@ -18,17 +18,19 @@ export class AnalyticService implements IAnalyticService {
         return data;
     }
 
-    async upMoon(id: string, user: any) {
+    async updateMoon(id: string, user: any, up: boolean) {
         const data = await this.findData(id, user);
-        data['moon'] = data['moon'] + 1;
+
+        //Update Moon count of data
+        if (up === true) {
+            data['moon'] = data['moon'] + 1;
+        } else {
+            data['moon'] = data['moon'] + -1;
+        }
+
+        //Update score and last activiy date of data
         data.last_activity_date = new Date().getTime();
-        const updated = await data.save();
-        return updated;
-    }
-    async downMoon(id: string, user: any) {
-        const data = await this.findData(id, user);
-        data['moon'] = data['moon'] - 1;
-        data.last_activity_date = new Date().getTime();
+
         const updated = await data.save();
         return updated;
     }

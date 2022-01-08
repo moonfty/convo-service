@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommentService } from '../services/comment.service';
-import { CreateCommentDto } from '../dtos/comment.dto';
+import { CreateCommentDto, ICommentResponse } from '../dtos/comment.dto';
 import {
     NotFoundSwaggerSchema,
     BadRequestSwaggerSchema,
@@ -23,6 +23,7 @@ import {
     TransformInterceptor,
 } from '../interceptors/transfrom.interceptor';
 import { IComment } from '../models/comment.model';
+import { MoonRepository } from '../models/moon/moon.repository';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -54,13 +55,15 @@ export class CommentController {
     async getWithPagination(
         @Param('page') page: number,
         @Param('parent') parent: string,
-    ): Promise<Array<IComment>> {
+    ): Promise<Array<ICommentResponse>> {
         try {
             const events = await this.commentService.getChildDataWithPagination(
                 parent,
                 page,
             );
-            return events;
+            const result = await MoonRepository.getCommentIsMoon(events);
+
+            return result;
         } catch (error) {
             throw error;
         }

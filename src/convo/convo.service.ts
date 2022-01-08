@@ -15,6 +15,7 @@ import {
 import { IService, Service } from './interfaces/service.interface';
 import ConvoModel, { IConvo } from './models/convo/convo.model';
 import { ConvoRepository } from './models/convo/convo.repository';
+import { MoonRepository } from './models/moon/moon.repository';
 
 @Injectable()
 export class ConvoService extends Service implements IAnalyticService {
@@ -24,11 +25,8 @@ export class ConvoService extends Service implements IAnalyticService {
         this.analyticService = new AnalyticService(ConvoModel, '');
     }
 
-    async upMoon(id: string, user: string): Promise<any> {
-        return await this.analyticService.upMoon(id, user);
-    }
-    async downMoon(id: string, user: string): Promise<any> {
-        return await this.analyticService.downMoon(id, user);
+    async updateMoon(id: string, user: string, up: boolean): Promise<any> {
+        return await this.analyticService.updateMoon(id, user, up);
     }
 
     async searchRelevantResultsWithPagination(data: SearchPaginationDto) {
@@ -36,6 +34,7 @@ export class ConvoService extends Service implements IAnalyticService {
             data.text,
             data.page,
         );
+
         return res;
     }
 }

@@ -1,7 +1,8 @@
 import { Schema, model } from 'mongoose';
+import * as mongoose from 'mongoose';
 
 export interface IConvo {
-    id: string;
+    id: mongoose.Types.ObjectId;
     user: string;
     text: string;
     moon: number;

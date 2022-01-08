@@ -13,11 +13,12 @@ import CommentModel, { IComment } from '../models/comment.model';
 import { CommentService } from '../services/comment.service';
 import { CommentController } from '../controllers/comment.controller';
 import { CreateCommentDto } from '../dtos/comment.dto';
-import ConvoModel, { IConvo } from '../models/convo.model';
+import ConvoModel, { IConvo } from '../models/convo/convo.model';
 import { ChildCommentController } from '../controllers/childcomment.controller';
 import { ChildCommentService } from '../services/childcomment.service';
 import { CreateChildCommentDto } from '../dtos/childcomment.dto';
 import ChildCommentModel from '../models/childcomment.model';
+const { ObjectId } = require('mongodb');
 
 const mongod = new MongoMemoryServer();
 
@@ -52,7 +53,7 @@ describe('ChildComment Service E2E Tests', () => {
         const data: CreateCommentDto = {
             user: '123',
             text: 'Test Convo Data',
-            convo: '1',
+            convo: new ObjectId(),
         };
         const created = await CommentModel.create(data);
         saved_comment = await created.save();

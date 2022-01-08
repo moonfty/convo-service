@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { errorMessages } from '../errors/convo.errors';
+import { MoonRepository } from '../models/moon/moon.repository';
 
 export interface IService {
     create(data);

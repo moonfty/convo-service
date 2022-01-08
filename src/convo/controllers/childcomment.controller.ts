@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommentService } from '../services/comment.service';
-import { CreateCommentDto } from '../dtos/comment.dto';
+import { CreateCommentDto, ICommentResponse } from '../dtos/comment.dto';
 import {
     NotFoundSwaggerSchema,
     BadRequestSwaggerSchema,
@@ -24,6 +24,7 @@ import {
 } from '../interceptors/transfrom.interceptor';
 import { IComment } from '../models/comment.model';
 import { ChildCommentService } from '../services/childcomment.service';
+import { IChildComment } from '../models/childcomment.model';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -55,7 +56,7 @@ export class ChildCommentController {
     async getWithPagination(
         @Param('page') page: number,
         @Param('parent') parent: string,
-    ): Promise<Array<IComment>> {
+    ): Promise<Array<IChildComment>> {
         try {
             const events =
                 await this.childCommentService.getChildDataWithPagination(
