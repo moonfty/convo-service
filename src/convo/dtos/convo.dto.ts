@@ -1,8 +1,8 @@
 import { IConvo } from '../models/convo/convo.model';
 
 export class CreateConvoDto {
-    user: string;
     text: string;
+    user?: string;
     nft_post?: string;
     link?: string;
     asset?: string;

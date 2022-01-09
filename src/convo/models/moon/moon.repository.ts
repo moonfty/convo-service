@@ -12,11 +12,12 @@ export class MoonRepository {
 
     static async getCommentIsMoon(
         data: Array<IComment>,
+        user: string,
     ): Promise<Array<ICommentResponse>> {
         let commentResponseList: Array<ICommentResponse> = [];
         for (var comment of data) {
             const moondetail = await MoonModel.findOne({
-                user: '123',
+                user: user,
                 comment: comment.id,
             });
             var commentResponse: ICommentResponse = {
@@ -32,7 +33,6 @@ export class MoonRepository {
             commentResponse.comment = comment;
             commentResponseList.push(commentResponse);
         }
-        console.log(commentResponseList);
         return commentResponseList;
     }
 

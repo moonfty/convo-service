@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 
 export class CreateCommentDto {
     convo: mongoose.Types.ObjectId;
-    user: string;
+    user?: string;
     text: string;
     nft_post?: string;
     link?: string;

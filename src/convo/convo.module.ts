@@ -21,8 +21,4 @@ import { MoonService } from './services/moon.service';
         MoonController,
     ],
 })
-export class ConvoModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(JWTAuthenticationMiddleware).exclude();
-    }
-}
+export class ConvoModule {}

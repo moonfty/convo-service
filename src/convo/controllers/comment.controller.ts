@@ -3,10 +3,12 @@ import {
     Body,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     Param,
     Patch,
     Post,
+    Res,
     UseInterceptors,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -24,6 +26,7 @@ import {
 } from '../interceptors/transfrom.interceptor';
 import { IComment } from '../models/comment.model';
 import { MoonRepository } from '../models/moon/moon.repository';
+import { Response } from 'express';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -41,8 +44,16 @@ export class CommentController {
     constructor(private readonly commentService: CommentService) {}
     @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Post()
-    async create(@Body() data: CreateCommentDto): Promise<IComment> {
+    async create(
+        @Body() data: CreateCommentDto,
+        @Res({ passthrough: true }) response: Response,
+    ): Promise<IComment> {
         try {
+            if (!data.user) {
+                data.user = response.locals.user;
+            } else if (data.user && data.user != response.locals.user) {
+                throw new ForbiddenException('Wrong Access Token');
+            }
             const saved_event = await this.commentService.create(data);
             return saved_event;
         } catch (error) {
@@ -55,13 +66,17 @@ export class CommentController {
     async getWithPagination(
         @Param('page') page: number,
         @Param('parent') parent: string,
+        @Res({ passthrough: true }) response: Response,
     ): Promise<Array<ICommentResponse>> {
         try {
             const events = await this.commentService.getChildDataWithPagination(
                 parent,
                 page,
             );
-            const result = await MoonRepository.getCommentIsMoon(events);
+            const result = await MoonRepository.getCommentIsMoon(
+                events,
+                response.locals.user,
+            );
 
             return result;
         } catch (error) {

@@ -3,6 +3,7 @@ import {
     Body,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     Param,
     Patch,
@@ -43,12 +44,21 @@ export class ConvoController {
     constructor(private readonly convoService: ConvoService) {}
     @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Post()
-    async create(@Body() data: CreateConvoDto): Promise<IConvo> {
+    async create(
+        @Body() data: CreateConvoDto,
+        @Res({ passthrough: true }) response: Response,
+    ): Promise<IConvo> {
         try {
+            if (!data.user) {
+                data.user = response.locals.user;
+            } else if (data.user && data.user != response.locals.user) {
+                throw new ForbiddenException('Wrong Access Token');
+            }
+
             const saved_event = await this.convoService.create(data);
             return saved_event;
         } catch (error) {
-            throw error;
+            throw new BadRequestException(error.message);
         }
     }
 
@@ -56,6 +66,7 @@ export class ConvoController {
     @Get('/page/:page')
     async getWithPagination(
         @Param('page') page: number,
+        @Res({ passthrough: true }) res: Response,
     ): Promise<Array<IConvo>> {
         try {
             const convos = await this.convoService.getDataWithPagination(page);
