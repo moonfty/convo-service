@@ -40,7 +40,7 @@ export class Service implements IService {
         const data = await this.model.find(
             {},
             {},
-            { skip: page * 10, limit: 10, sort: { create_date: 'asc' } },
+            { skip: page * 10, limit: 10, sort: { create_date: 'desc' } },
         );
         return data;
     }
