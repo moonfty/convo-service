@@ -14,7 +14,7 @@ export const ChildCommentSchema: Schema<IChildCommentDocument> = new Schema({
     parent: { type: String, ref: 'Comment' },
     user: { type: String, required: true },
     text: { type: String, required: true },
-    create_date: { type: Number, default: new Date().getTime() },
+    create_date: { type: Number, default: +new Date() },
     delete_date: { type: Number },
 });
 

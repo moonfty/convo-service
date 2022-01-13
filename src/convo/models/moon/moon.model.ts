@@ -15,7 +15,7 @@ export const MoonSchema: Schema<IMoonDocument> = new Schema(
         user: { type: String, required: true, index: true },
         convo: { type: Schema.Types.ObjectId, required: false, index: true },
         comment: { type: Schema.Types.ObjectId, required: false, index: true },
-        create_date: { type: Number, default: new Date().getTime() },
+        create_date: { type: Number, default: +new Date() },
     },
     {
         toJSON: {

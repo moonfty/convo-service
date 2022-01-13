@@ -30,8 +30,8 @@ export const CommentSchema: Schema<ICommentDocument> = new Schema(
         asset: { type: String },
         color: { type: String, required: true, default: 'blue' },
         event_date: { type: Number },
-        create_date: { type: Number, default: new Date().getTime() },
-        last_activity_date: { type: Number, default: new Date().getTime() },
+        create_date: { type: Number, default: +new Date() },
+        last_activity_date: { type: Number, default: +new Date() },
         delete_date: { type: Number },
     },
     {
