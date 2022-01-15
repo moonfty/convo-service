@@ -28,7 +28,7 @@ export const CommentSchema: Schema<ICommentDocument> = new Schema(
         nft_post: { type: String },
         link: { type: String },
         asset: { type: String },
-        color: { type: String, required: true, default: 'blue' },
+        color: { type: String, required: true, default: '0' },
         event_date: { type: Number },
         create_date: { type: Number, default: +new Date() },
         last_activity_date: { type: Number, default: +new Date() },

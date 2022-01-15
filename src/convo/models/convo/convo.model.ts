@@ -12,9 +12,9 @@ export interface IConvo {
     asset?: string;
     event_date?: number;
     color?: string;
-    create_date: number;
+    create_date?: number;
     last_activity_date: number;
-    delete_date: number;
+    delete_date?: number;
 }
 
 export interface IConvoDocument extends IConvo, Document {}
@@ -28,7 +28,7 @@ export const ConvoSchema: Schema<IConvoDocument> = new Schema(
         nft_post: { type: String },
         link: { type: String },
         asset: { type: String },
-        color: { type: String, required: true, default: 'blue' },
+        color: { type: String, required: true },
         event_date: { type: Number },
         create_date: { type: Number, default: +new Date() },
         last_activity_date: { type: Number, default: +new Date() },
