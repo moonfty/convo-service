@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as _ from 'lodash';
+import { Schema } from 'mongoose';
 import { CreateCommentDto } from '../dtos/comment.dto';
 import {
     AnalyticService,

@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import * as mongoose from 'mongoose';
 
 export interface IConvo {
-    id: mongoose.Types.ObjectId;
+    id: Schema.Types.ObjectId;
     user: string;
     text: string;
     moon: number;
@@ -28,7 +28,7 @@ export const ConvoSchema: Schema<IConvoDocument> = new Schema(
         nft_post: { type: String },
         link: { type: String },
         asset: { type: String },
-        color: { type: String, required: true },
+        color: { type: String, required: true, default: '0' },
         event_date: { type: Number },
         create_date: { type: Number, default: +new Date() },
         last_activity_date: { type: Number, default: +new Date() },

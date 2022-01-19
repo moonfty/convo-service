@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model, Query } from 'mongoose';
+import { Model, ObjectId, Query, Schema } from 'mongoose';
 import { errorMessages } from '../errors/convo.errors';
 import ConvoModel, { IConvoDocument } from '../models/convo/convo.model';
+import * as mongoose from 'mongoose'; // will work
 
 export interface IAnalyticService {
     updateMoon(id: string, up: boolean): Promise<any>;
@@ -11,7 +12,7 @@ export class AnalyticService implements IAnalyticService {
     constructor(public model: Model<any>, public parent?: string) {}
 
     private async findData(id: string) {
-        const data = await this.model.findById(id);
+        const data = await this.model.findById(new mongoose.Types.ObjectId(id));
         if (!data) {
             throw new NotFoundException(errorMessages.NOT_FOUND_ERROR);
         }

@@ -4,6 +4,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import * as _ from 'lodash';
+import { Schema } from 'mongoose';
 import { CreateCommentDto } from './dtos/comment.dto';
 import { CreateConvoDto } from './dtos/convo.dto';
 import { SearchPaginationDto } from './dtos/search.dto';

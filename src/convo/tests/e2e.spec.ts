@@ -10,7 +10,7 @@ const mongod = new MongoMemoryServer();
 
 describe('E2E Tests', () => {
     var app: INestApplication;
-    var convo_id: mongoose.Types.ObjectId;
+    var convo_id: Schema.Types.ObjectId;
     const convoUrl = '/convo';
     const commentUrl = '/comment';
     const e2eHelper = new E2EHelper(mongod);

@@ -4,13 +4,13 @@ import * as mongoose from 'mongoose';
 
 export class CreateMoonDto {
     user?: string;
-    convo?: mongoose.Types.ObjectId;
-    comment?: mongoose.Types.ObjectId;
+    convo?: string;
+    comment?: string;
     create_date: number;
 }
 
 export class DeleteMoonDto {
-    user: string;
-    convo?: mongoose.Types.ObjectId;
-    comment?: mongoose.Types.ObjectId;
+    user?: string;
+    convo?: string;
+    comment?: string;
 }

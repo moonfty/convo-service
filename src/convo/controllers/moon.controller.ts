@@ -65,12 +65,12 @@ export class MoonController {
             const saved_event = await this.moonService.create(data);
             if (data.convo) {
                 const updated_convo = await this.convoService.updateMoon(
-                    data.convo.toString(),
+                    data.convo,
                     true,
                 );
             } else {
                 const updated_comment = await this.commentService.updateMoon(
-                    data.comment.toString(),
+                    data.comment,
                     true,
                 );
             }
@@ -81,28 +81,37 @@ export class MoonController {
         }
     }
 
-    /*
     @ApiResponse({ status: 201, type: ResponseFormatDto })
     @Delete()
-    async delete(@Body() data: DeleteMoonDto): Promise<IMoon> {
+    async delete(
+        @Body() data: DeleteMoonDto,
+        @Res({ passthrough: true }) response: Response,
+    ): Promise<IMoon> {
         try {
-            const saved_event = await this.moonService.delete(data);
+            if (!data.user) {
+                data.user = response.locals.user;
+            } else if (data.user && data.user != response.locals.user) {
+                throw new ForbiddenException('Wrong Access Token');
+            }
+            const deleted_moon = await this.moonService.deleteMoon(
+                data.user,
+                data,
+            );
             if (data.convo) {
                 const updated_convo = await this.convoService.updateMoon(
-                    data.convo.toString(),
-                    true,
+                    data.convo,
+                    false,
                 );
             } else {
                 const updated_comment = await this.commentService.updateMoon(
-                    data.comment.toString(),
-                    true,
+                    data.comment,
+                    false,
                 );
             }
 
-            return saved_event;
+            return deleted_moon;
         } catch (error) {
             throw error;
         }
     }
-    */
 }
