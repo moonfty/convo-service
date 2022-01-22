@@ -60,6 +60,7 @@ export class ChildCommentController {
         try {
             const events =
                 await this.childCommentService.getChildDataWithPagination(
+                    'parent',
                     parent,
                     page,
                 );

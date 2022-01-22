@@ -9,7 +9,7 @@ import { MoonRepository } from '../models/moon/moon.repository';
 
 export interface IService {
     create(data);
-    getChildDataWithPagination(parent: string, page: number);
+    getChildDataWithPagination(name: string, parent: string, page: number);
     getDataWithPagination(page: number);
     delete(id: string, user: string);
 }
@@ -45,9 +45,13 @@ export class Service implements IService {
         return data;
     }
 
-    async getChildDataWithPagination(parent: string, page: number) {
+    async getChildDataWithPagination(
+        name: string,
+        parent: string,
+        page: number,
+    ) {
         var query = {};
-        query[this.parent] = parent;
+        query[name] = parent;
 
         const data = await this.model.find(
             query,

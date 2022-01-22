@@ -70,6 +70,7 @@ export class CommentController {
     ): Promise<Array<ICommentResponse>> {
         try {
             const events = await this.commentService.getChildDataWithPagination(
+                'convo',
                 parent,
                 page,
             );
