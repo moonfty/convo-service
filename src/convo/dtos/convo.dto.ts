@@ -10,7 +10,7 @@ export class CreateConvoDto {
     color?: string;
 }
 
-export interface IConvoResponse<T> {
+export interface IConvoResponse {
     convo: IConvo;
     isMoon: boolean;
 }

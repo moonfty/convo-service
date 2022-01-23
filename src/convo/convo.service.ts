@@ -38,4 +38,15 @@ export class ConvoService extends Service implements IAnalyticService {
 
         return res;
     }
+
+    async updateCommentCount(id: string, up: boolean): Promise<IConvo> {
+        const _convo = await ConvoModel.findById(id);
+        if (up == true) {
+            _convo.comment_count += 1;
+        } else if (up == false) {
+            _convo.comment_count -= 1;
+        }
+
+        return await _convo.save();
+    }
 }

@@ -1,4 +1,5 @@
 import { ICommentResponse } from 'src/convo/dtos/comment.dto';
+import { IConvoResponse } from 'src/convo/dtos/convo.dto';
 import { CreateMoonDto } from 'src/convo/dtos/moon.dto';
 import { IComment } from '../comment.model';
 import { IConvo } from '../convo/convo.model';
@@ -38,7 +39,28 @@ export class MoonRepository {
 
     static async getConvoIsMoon(
         data: Array<IConvo>,
-    ): Promise<Array<ICommentResponse>> {
+        user: string,
+    ): Promise<Array<IConvoResponse>> {
+        let convoResponselist: Array<IConvoResponse> = [];
+        for (var convo of data) {
+            const moondetail = await MoonModel.findOne({
+                user: user,
+                convo: convo.id,
+            });
+            var convoResponse: IConvoResponse = {
+                convo: undefined,
+                isMoon: false,
+            };
+
+            if (moondetail) {
+                convoResponse['isMoon'] = true;
+            } else {
+                convoResponse['isMoon'] = false;
+            }
+            convoResponse.convo = convo;
+            convoResponselist.push(convoResponse);
+        }
+        return convoResponselist;
         return;
     }
 }
