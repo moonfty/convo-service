@@ -71,7 +71,7 @@ export class ConvoController {
     ): Promise<Array<IConvo>> {
         try {
             const convos = await this.convoService.getDataWithPagination(page);
-            const result = await MoonRepository.getCommentIsMoon(
+            const result = await MoonRepository.getConvoIsMoon(
                 convos,
                 res.locals.user,
             );
