@@ -84,7 +84,7 @@ export class ConvoController {
     @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Get('search/:text/page/:page')
     async getSearchWithPagination(
-        @Param('search') text: string,
+        @Param('text') text: string,
         @Param('page') page: number = 0,
     ): Promise<Array<IConvo>> {
         try {

@@ -45,10 +45,12 @@ export const ConvoSchema: Schema<IConvoDocument> = new Schema(
     },
 );
 
-ConvoSchema.index({
-    text: 'text',
-    product_description: 'text',
-});
+ConvoSchema.index(
+    {
+        text: 'text',
+    },
+    { default_language: 'none' },
+);
 const ConvoModel = model<IConvoDocument>('Convo', ConvoSchema);
 ConvoModel.createIndexes();
 

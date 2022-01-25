@@ -17,7 +17,6 @@ export class ConvoRepository {
             { score: { $meta: 'textScore' } },
             query_options,
         );
-
         return data;
     }
 
