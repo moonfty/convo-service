@@ -27,6 +27,7 @@ import {
 import { IComment } from '../models/comment.model';
 import { MoonRepository } from '../models/moon/moon.repository';
 import { Response } from 'express';
+import { ConvoService } from '../convo.service';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -41,7 +42,10 @@ import { Response } from 'express';
 @ApiTags('comment')
 @Controller('comment')
 export class CommentController {
-    constructor(private readonly commentService: CommentService) {}
+    constructor(
+        private readonly commentService: CommentService,
+        private readonly convoService: ConvoService,
+    ) {}
     @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Post()
     async create(
@@ -55,6 +59,10 @@ export class CommentController {
                 throw new ForbiddenException('Wrong Access Token');
             }
             const saved_event = await this.commentService.create(data);
+            await this.convoService.updateCommentCount(
+                data.convo.toString(),
+                true,
+            );
             return saved_event;
         } catch (error) {
             throw error;

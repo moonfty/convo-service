@@ -3,6 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ChildCommentController } from './convo/controllers/childcomment.controller';
 import { CommentController } from './convo/controllers/comment.controller';
 import { MoonController } from './convo/controllers/moon.controller';
 import { ConvoController } from './convo/convo.controller';
@@ -30,6 +31,11 @@ export class AppModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(JWTAuthenticationMiddleware)
-            .forRoutes(ConvoController, MoonController, CommentController);
+            .forRoutes(
+                ConvoController,
+                MoonController,
+                CommentController,
+                ChildCommentController,
+            );
     }
 }

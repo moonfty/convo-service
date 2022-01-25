@@ -24,13 +24,14 @@ import {
     ResponseFormatDto,
     TransformInterceptor,
 } from '../interceptors/transfrom.interceptor';
-import { IComment } from '../models/comment.model';
+import CommentModel, { IComment } from '../models/comment.model';
 import { MoonRepository } from '../models/moon/moon.repository';
 import { CreateMoonDto, DeleteMoonDto } from '../dtos/moon.dto';
 import { MoonService } from '../services/moon.service';
-import { IMoon } from '../models/moon/moon.model';
+import MoonModel, { IMoon } from '../models/moon/moon.model';
 import { ConvoService } from '../convo.service';
 import { Response } from 'express';
+import ConvoModel from '../models/convo/convo.model';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -62,20 +63,53 @@ export class MoonController {
             } else if (data.user && data.user != response.locals.user) {
                 throw new ForbiddenException('Wrong Access Token');
             }
-            const saved_event = await this.moonService.create(data);
-            if (data.convo) {
-                const updated_convo = await this.convoService.updateMoon(
-                    data.convo,
-                    true,
-                );
-            } else {
-                const updated_comment = await this.commentService.updateMoon(
-                    data.comment,
-                    true,
-                );
-            }
 
-            return saved_event;
+            if (data.convo) {
+                const convodetail = await ConvoModel.findOne({
+                    user: data.user,
+                    _id: data.convo,
+                });
+                if (convodetail) {
+                    throw new ForbiddenException(
+                        'Cannot moon your own content',
+                    );
+                }
+                const moondetail = await MoonModel.findOne({
+                    user: data.user,
+                    convo: data.convo,
+                });
+                if (!moondetail) {
+                    const saved_event = await this.moonService.create(data);
+                    const updated_convo = await this.convoService.updateMoon(
+                        data.convo,
+                        true,
+                    );
+                    return saved_event;
+                }
+            } else {
+                const commentdetail = await CommentModel.findOne({
+                    user: data.user,
+                    _id: data.comment,
+                });
+                if (commentdetail) {
+                    throw new ForbiddenException(
+                        'Cannot moon your own content',
+                    );
+                }
+                const moondetail = await MoonModel.findOne({
+                    user: data.user,
+                    comment: data.comment,
+                });
+                if (!moondetail) {
+                    const saved_event = await this.moonService.create(data);
+                    const updated_comment =
+                        await this.commentService.updateMoon(
+                            data.comment,
+                            true,
+                        );
+                    return saved_event;
+                }
+            }
         } catch (error) {
             throw error;
         }

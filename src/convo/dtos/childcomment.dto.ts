@@ -3,6 +3,6 @@ import * as mongoose from 'mongoose';
 
 export class CreateChildCommentDto {
     parent: mongoose.Schema.Types.ObjectId;
-    user: string;
     text: string;
+    user?: string;
 }

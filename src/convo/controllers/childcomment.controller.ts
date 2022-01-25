@@ -3,10 +3,12 @@ import {
     Body,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     Param,
     Patch,
     Post,
+    Res,
     UseInterceptors,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -25,6 +27,8 @@ import {
 import { IComment } from '../models/comment.model';
 import { ChildCommentService } from '../services/childcomment.service';
 import { IChildComment } from '../models/childcomment.model';
+import { CreateChildCommentDto } from '../dtos/childcomment.dto';
+import { Response } from 'express';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -42,8 +46,17 @@ export class ChildCommentController {
     constructor(private readonly childCommentService: ChildCommentService) {}
     @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Post()
-    async create(@Body() data: CreateCommentDto): Promise<IComment> {
+    async create(
+        @Body() data: CreateChildCommentDto,
+        @Res({ passthrough: true }) response: Response,
+    ): Promise<IChildComment> {
         try {
+            console.log(data);
+            if (!data.user) {
+                data.user = response.locals.user;
+            } else if (data.user && data.user != response.locals.user) {
+                throw new ForbiddenException('Wrong Access Token');
+            }
             const saved_event = await this.childCommentService.create(data);
             return saved_event;
         } catch (error) {

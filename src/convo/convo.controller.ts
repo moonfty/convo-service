@@ -27,7 +27,6 @@ import {
     TransformInterceptor,
 } from './interceptors/transfrom.interceptor';
 import { IConvo } from './models/convo/convo.model';
-import { MoonRepository } from './models/moon/moon.repository';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -71,10 +70,6 @@ export class ConvoController {
     ): Promise<Array<IConvo>> {
         try {
             const convos = await this.convoService.getDataWithPagination(page);
-            const result = await MoonRepository.getConvoIsMoon(
-                convos,
-                res.locals.user,
-            );
             return convos;
         } catch (error) {
             throw error;
@@ -106,7 +101,8 @@ export class ConvoController {
         @Res({ passthrough: true }) res: Response,
     ): Promise<IConvo> {
         try {
-            return await this.convoService.delete(id, res.locals.user);
+            const deleted = await this.convoService.delete(id, res.locals.user);
+            return deleted;
         } catch (error) {
             throw error;
         }
