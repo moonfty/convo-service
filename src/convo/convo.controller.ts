@@ -14,7 +14,7 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ConvoService } from './convo.service';
-import { CreateConvoDto } from './dtos/convo.dto';
+import { CreateConvoDto, IConvoResponse } from './dtos/convo.dto';
 import { SearchPaginationDto } from './dtos/search.dto';
 import {
     NotFoundSwaggerSchema,
@@ -27,6 +27,7 @@ import {
     TransformInterceptor,
 } from './interceptors/transfrom.interceptor';
 import { IConvo } from './models/convo/convo.model';
+import { MoonRepository } from './models/moon/moon.repository';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -67,10 +68,14 @@ export class ConvoController {
     async getWithPagination(
         @Param('page') page: number,
         @Res({ passthrough: true }) res: Response,
-    ): Promise<Array<IConvo>> {
+    ): Promise<Array<IConvoResponse>> {
         try {
             const convos = await this.convoService.getDataWithPagination(page);
-            return convos;
+            const convos_ismoon = await MoonRepository.getConvoIsMoon(
+                convos,
+                res.locals.user,
+            );
+            return convos_ismoon;
         } catch (error) {
             throw error;
         }
