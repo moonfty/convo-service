@@ -64,6 +64,24 @@ export class ConvoController {
     }
 
     @ApiResponse({ status: 200, type: ResponseFormatDto })
+    @Get(':id')
+    async getWithId(
+        @Param('id') id: string,
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<Array<IConvoResponse>> {
+        try {
+            const convo = await this.convoService.getById(id);
+            const convos_ismoon = await MoonRepository.getConvoIsMoon(
+                [convo],
+                res.locals.user,
+            );
+            return convos_ismoon;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Get('/page/:page')
     async getWithPagination(
         @Param('page') page: number,

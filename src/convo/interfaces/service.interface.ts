@@ -17,6 +17,11 @@ export interface IService {
 export class Service implements IService {
     constructor(public model: Model<any>, public parent?: string) {}
 
+    async getById(id: string): Promise<any> {
+        const found_data = await this.model.findById(id);
+        return found_data;
+    }
+
     async create(data: any): Promise<any> {
         const created = await this.model.create(data);
         const saved = await created.save();
