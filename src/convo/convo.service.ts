@@ -6,7 +6,7 @@ import {
 import * as _ from 'lodash';
 import { Schema } from 'mongoose';
 import { CreateCommentDto } from './dtos/comment.dto';
-import { CreateConvoDto } from './dtos/convo.dto';
+import { CreateConvoDto, IConvoResponse } from './dtos/convo.dto';
 import { SearchPaginationDto } from './dtos/search.dto';
 import { errorMessages } from './errors/convo.errors';
 import {
@@ -28,6 +28,15 @@ export class ConvoService extends Service implements IAnalyticService {
 
     async updateMoon(id: string, up: boolean): Promise<any> {
         return await this.analyticService.updateMoon(id, up);
+    }
+
+    async getTrends(
+        page: number,
+        user: string,
+    ): Promise<Array<IConvoResponse>> {
+        const convos = await ConvoRepository.getTrends(page);
+        const convos_ismoon = await MoonRepository.getConvoIsMoon(convos, user);
+        return convos_ismoon;
     }
 
     async searchRelevantResultsWithPagination(data: SearchPaginationDto) {

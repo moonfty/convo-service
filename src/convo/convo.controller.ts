@@ -100,6 +100,23 @@ export class ConvoController {
     }
 
     @ApiResponse({ status: 200, type: ResponseFormatDto })
+    @Get('/trend/page/:page')
+    async getTrends(
+        @Param('page') page: number,
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<Array<IConvoResponse>> {
+        try {
+            const convos = await this.convoService.getTrends(
+                page,
+                res.locals.user,
+            );
+            return convos;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Get('search/:text/page/:page')
     async getSearchWithPagination(
         @Param('text') text: string,
