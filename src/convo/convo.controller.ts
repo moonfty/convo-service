@@ -121,14 +121,17 @@ export class ConvoController {
     async getSearchWithPagination(
         @Param('text') text: string,
         @Param('page') page: number = 0,
-    ): Promise<Array<IConvo>> {
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<Array<IConvoResponse>> {
         try {
             const data: SearchPaginationDto = { text: text, page: page };
             const convos =
                 await this.convoService.searchRelevantResultsWithPagination(
                     data,
                 );
-            return convos;
+            const convos_ismoon = await MoonRepository.getConvoIsMoon(convos, res.locals.user);
+
+            return convos_ismoon;
         } catch (error) {
             throw error;
         }
