@@ -4,7 +4,6 @@ import { DeleteMoonDto } from '../dtos/moon.dto';
 import { Service } from '../interfaces/service.interface';
 import MoonModel from '../models/moon/moon.model';
 import * as mongoose from 'mongoose';
-import { deploymentmanager } from 'googleapis/build/src/apis/deploymentmanager';
 
 @Injectable()
 export class MoonService extends Service {
