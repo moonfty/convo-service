@@ -92,4 +92,19 @@ export class CommentController {
             throw error;
         }
     }
+
+    @ApiResponse({ status: 200, type: ResponseFormatDto })
+    @Delete(':id')
+    async delete(
+        @Param('id') id: string,
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<IComment> {
+        try {
+            const deleted = await this.commentService.delete(id, res.locals.user);
+            const updated_convo = await this.convoService.updateCommentCount(deleted.parent.toString(),false)
+            return deleted;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

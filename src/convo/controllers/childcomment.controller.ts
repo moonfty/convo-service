@@ -43,7 +43,7 @@ import { Response } from 'express';
 @ApiTags('child')
 @Controller('child')
 export class ChildCommentController {
-    constructor(private readonly childCommentService: ChildCommentService) {}
+    constructor(private readonly childCommentService: ChildCommentService , private readonly commentService:CommentService) {}
     @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Post()
     async create(
@@ -57,7 +57,8 @@ export class ChildCommentController {
             } else if (data.user && data.user != response.locals.user) {
                 throw new ForbiddenException('Wrong Access Token');
             }
-            const saved_event = await this.childCommentService.create(data);
+            const saved_event:IChildComment = await this.childCommentService.create(data);
+            const updated_comment = await this.commentService.updateCommentCount(saved_event.parent,true)
             return saved_event;
         } catch (error) {
             throw error;
@@ -78,6 +79,21 @@ export class ChildCommentController {
                     page,
                 );
             return events;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @ApiResponse({ status: 200, type: ResponseFormatDto })
+    @Delete(':id')
+    async delete(
+        @Param('id') id: string,
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<IChildComment> {
+        try {
+            const deleted:IChildComment = await this.childCommentService.delete(id, res.locals.user);
+            const updated_comment = await this.commentService.updateCommentCount(deleted.parent,false)
+            return deleted;
         } catch (error) {
             throw error;
         }

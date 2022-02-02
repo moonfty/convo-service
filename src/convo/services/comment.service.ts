@@ -20,4 +20,15 @@ export class CommentService extends Service implements IAnalyticService {
     async updateMoon(id: string, up: boolean): Promise<any> {
         return await this.analyticService.updateMoon(id, up);
     }
+
+    async updateCommentCount(id: string, up: boolean): Promise<IComment> {
+        const comment = await CommentModel.findById(id);
+        if (up == true) {
+            comment.child_count += 1;
+        } else if (up == false) {
+            comment.child_count -= 1;
+        }
+
+        return await comment.save();
+    }
 }

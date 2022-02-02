@@ -7,6 +7,7 @@ export interface IComment {
     user: string;
     text: string;
     moon: number;
+    child_count: number
     nft_post?: string;
     link?: string;
     asset?: string;
@@ -25,6 +26,7 @@ export const CommentSchema: Schema<ICommentDocument> = new Schema(
         user: { type: String, required: true },
         text: { type: String, required: true },
         moon: { type: Number, required: true, default: 0 },
+        child_count: { type: Number, required: true, default: 0 },
         nft_post: { type: String },
         link: { type: String },
         asset: { type: String },
