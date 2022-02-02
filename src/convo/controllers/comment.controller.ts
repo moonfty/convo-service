@@ -100,8 +100,8 @@ export class CommentController {
         @Res({ passthrough: true }) res: Response,
     ): Promise<IComment> {
         try {
-            const deleted = await this.commentService.delete(id, res.locals.user);
-            const updated_convo = await this.convoService.updateCommentCount(deleted.parent.toString(),false)
+            const deleted:IComment = await this.commentService.delete(id, res.locals.user);
+            const updated_convo = await this.convoService.updateCommentCount(deleted.convo.toString(),false)
             return deleted;
         } catch (error) {
             throw error;

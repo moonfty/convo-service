@@ -55,6 +55,7 @@ export const createSeedData = async () => {
     var last_comment: IComment = {
         id: new ObjectId(),
         convo: new ObjectId(),
+        child_count: 0 ,
         user: '',
         text: '',
         moon: 0,
