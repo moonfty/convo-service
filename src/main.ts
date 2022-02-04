@@ -7,6 +7,8 @@ import { mongoDbConnectionString, PORT } from './config';
 import { ValidationPipeOptions } from './convo/validation/convo.validation';
 import { initializeApp } from 'firebase-admin/app';
 
+import {logger} from './logger/logger'
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe(new ValidationPipeOptions()));
@@ -24,6 +26,7 @@ async function bootstrap() {
   //initializeApp();
   await app.listen(PORT);
 }
+logger.error(new Error('error test'))
 bootstrap();
 
 const connectToTheDatabase = async () => {
@@ -32,11 +35,41 @@ const connectToTheDatabase = async () => {
       .connect(mongoDbConnectionString, {})
       .then((res) => {})
       .catch((err) => {
+        logger.error(err)
         console.log(err);
       });
   } catch (error) {
+    logger.error(error)
+    throw(error)
     console.log(error);
+
   }
 };
 
+
+
+
+// let log_file_err=fs.createWriteStream(__dirname + '/error.log',{flags:'a'});  
+
+// process.on('uncaughtException', function(err) {
+// console.log('Caught exception: Caught exception: Caught exception: Caught exception: Caught exception: Caught exception: Caught exception: Caught exception: Caught exception: Caught exception: Caught exception: Caught exception: Caught exception: ' + err);
+// log_file_err.write(util.format('Caught exception: '+err) + '\n');
+// });
+
+// process.on('unhandledRejection', function(err) {
+//   console.log('Caught exception: \n\nunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejection' + err);
+//   log_file_err.write(util.format('Caught exception: '+err) + '\n');
+//   });
+
+//   process.on('unhandledPromiseRejection', function(err) {
+//     console.log('Caught exception: \n\nunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejectionunhandledRejection' + err);
+//     log_file_err.write(util.format('Caught exception: '+err) + '\n');
+//     });
+
+
+
+
+
 connectToTheDatabase().then().catch();
+
+
