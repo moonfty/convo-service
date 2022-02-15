@@ -23,7 +23,7 @@ export class Service implements IService {
     }
 
     async create(data: any): Promise<any> {
-        const created = await this.model.create(data);
+        const created = new this.model(data);
         const saved = await created.save();
         return saved;
     }
