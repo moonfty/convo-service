@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NestMiddleware, NotFoundException } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { JWTutil } from '../utils/jwt.util';
 
@@ -14,8 +14,17 @@ export class JWTAuthenticationMiddleware implements NestMiddleware {
             }
 
             const data: any = await this.jwtservice.verify(access_token);
-            res.locals.user = data.id;
-            res.locals.email = data.email;
+            if (data.n_token && req.method != 'GET') {
+                throw new ForbiddenException('Sign up required')
+              }
+            
+            if(!data.n_token ){
+                res.locals.user = data.id;
+                res.locals.email = data.email;
+            }
+            else {
+                res.locals.user = data.n_token;
+            }
         } catch (error) {
             throw error;
         }
