@@ -13,7 +13,7 @@ export interface IComment {
     asset?: string;
     event_date?: number;
     color?: string;
-    create_date: number;
+    create_date?: number;
     last_activity_date: number;
     delete_date: number;
 }
@@ -22,7 +22,7 @@ export interface ICommentDocument extends IComment, Document {}
 
 export const CommentSchema: Schema<ICommentDocument> = new Schema(
     {
-        convo: { type: Schema.Types.ObjectId, ref: 'Convo', index: true },
+        convo: { type: Schema.Types.ObjectId, index: true },
         user: { type: String, required: true },
         text: { type: String, required: true },
         moon: { type: Number, required: true, default: 0 },

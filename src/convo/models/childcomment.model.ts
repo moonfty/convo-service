@@ -11,7 +11,7 @@ export interface IChildComment {
 export interface IChildCommentDocument extends IChildComment, Document {}
 
 export const ChildCommentSchema: Schema<IChildCommentDocument> = new Schema({
-    parent: { type: String, ref: 'Comment' },
+    parent: { type: String },
     user: { type: String, required: true },
     text: { type: String, required: true },
     create_date: { type: Number, default: +new Date() },
