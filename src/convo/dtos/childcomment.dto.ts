@@ -5,4 +5,5 @@ export class CreateChildCommentDto {
     parent: mongoose.Schema.Types.ObjectId;
     text: string;
     user?: string;
+    create_date?: number
 }

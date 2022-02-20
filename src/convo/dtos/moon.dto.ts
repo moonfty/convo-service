@@ -6,7 +6,7 @@ export class CreateMoonDto {
     user?: string;
     convo?: string;
     comment?: string;
-    create_date: number;
+    create_date?: number
 }
 
 export class DeleteMoonDto {

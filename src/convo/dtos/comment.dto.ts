@@ -10,6 +10,7 @@ export class CreateCommentDto {
     asset?: string;
     event_date?: number;
     color?: string;
+    create_date?: number
 }
 
 export interface ICommentResponse {

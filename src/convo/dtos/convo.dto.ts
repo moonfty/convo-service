@@ -8,6 +8,7 @@ export class CreateConvoDto {
     asset?: string;
     event_date?: number;
     color?: string;
+    create_date?: number
 }
 
 export interface IConvoResponse {
