@@ -94,6 +94,24 @@ export class CommentController {
     }
 
     @ApiResponse({ status: 200, type: ResponseFormatDto })
+    @Get(':id')
+    async getWithId(
+        @Param('id') id: string,
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<Array<ICommentResponse>> {
+        try {
+            const comment = await this.convoService.getById(id);
+            const comment_ismoon = await MoonRepository.getCommentIsMoon(
+                [comment],
+                res.locals.user,
+            );
+            return comment_ismoon;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Delete(':id')
     async delete(
         @Param('id') id: string,

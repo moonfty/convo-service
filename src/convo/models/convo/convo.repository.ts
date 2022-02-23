@@ -2,6 +2,16 @@ import { getMonthFirstLastDays } from 'src/convo/utils/date.util';
 import ConvoModel, { IConvo } from './convo.model';
 
 export class ConvoRepository {
+
+    static async getUserConvos(user: string, page: number) {
+        const data = await ConvoModel.find(
+            {user: user},
+            {},
+            { skip: page * 10, limit: 10, sort: { create_date: 'desc' } },
+        );
+        return data;
+    }
+
     static async getTrends(page: number): Promise<Array<IConvo>> {
         const days = getMonthFirstLastDays();
         const data = await ConvoModel.find(

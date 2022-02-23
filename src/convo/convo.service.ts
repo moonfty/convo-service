@@ -26,6 +26,12 @@ export class ConvoService extends Service implements IAnalyticService {
         this.analyticService = new AnalyticService(ConvoModel, '');
     }
 
+    async getUserConvos(user: string, page: number): Promise<Array<IConvoResponse>>  {
+        const convos = await ConvoRepository.getUserConvos(user, page);
+        const convos_ismoon = await MoonRepository.getConvoIsMoon(convos, user);
+        return convos_ismoon;
+    }
+
     async updateMoon(id: string, up: boolean): Promise<any> {
         return await this.analyticService.updateMoon(id, up);
     }

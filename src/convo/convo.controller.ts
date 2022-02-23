@@ -150,4 +150,18 @@ export class ConvoController {
             throw error;
         }
     }
+
+    @ApiResponse({status: 200, type: ResponseFormatDto})
+    @Get('user/:user/page/:page')
+    async getUserConvos(@Param('user') user: string,
+        @Param('page') page: number = 0,
+        @Res({ passthrough: true }) res: Response,
+        ): Promise<Array<IConvoResponse>> {
+            try {
+                const convos = await this.convoService.getUserConvos(user, page);
+                return convos;
+            } catch (error) {
+                throw new BadRequestException(error);
+            }
+        }
 }
