@@ -4,13 +4,15 @@ import { Target } from 'googleapis-common';
 
 
 export enum EventTypes {
+    follow = 'follow',
     moon = 'moon',
-    comment = 'comment'
+    comment = 'comment',
+    gm = 'gm'
 }
 
 export enum TargetContentTypes {
     convo = 'convo',
-    comment = 'comment'
+    comment = 'comment',
 }
 
 export interface ITargetContent {
@@ -22,7 +24,7 @@ export interface IEvent {
     receiver: string;
     performer: string
     event_type: EventTypes
-    target_content: ITargetContent
+    target_content?: ITargetContent
     create_date: number
 }
 

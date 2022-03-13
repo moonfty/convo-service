@@ -29,6 +29,10 @@ import { ChildCommentService } from '../services/childcomment.service';
 import { IChildComment } from '../models/childcomment.model';
 import { CreateChildCommentDto } from '../dtos/childcomment.dto';
 import { Response } from 'express';
+import { EventTypes, IEvent, ITargetContent, TargetContentTypes } from '../models/event/event.model';
+import { EventService } from '../services/event.service';
+import { IConvo } from '../models/convo/convo.model';
+import { ConvoService } from '../convo.service';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -43,7 +47,10 @@ import { Response } from 'express';
 @ApiTags('child')
 @Controller('child')
 export class ChildCommentController {
-    constructor(private readonly childCommentService: ChildCommentService , private readonly commentService:CommentService) {}
+    constructor(private readonly childCommentService: ChildCommentService , 
+        private readonly commentService:CommentService,
+        private readonly eventService:EventService,
+        private readonly convoService: ConvoService) {}
     @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Post()
     async create(
@@ -59,6 +66,24 @@ export class ChildCommentController {
             }
             const saved_event:IChildComment = await this.childCommentService.create(data);
             const updated_comment = await this.commentService.updateCommentCount(saved_event.parent,true)
+
+            // Notification event
+            const comment:IComment = await this.commentService.getById(data.parent.toString())
+            const convo:IConvo = await this.convoService.getById(comment.convo.toString())
+            if(convo.user != data.user){
+                const target_content: ITargetContent = {
+                    type:TargetContentTypes.comment,
+                    id: data.parent.toString()
+                }
+                const eventData: IEvent = {performer: data.user, 
+                    receiver: comment.user,
+                    event_type: EventTypes.comment,
+                    target_content: target_content,
+                    create_date:data.create_date}
+                    
+                await this.eventService.create(eventData)
+            }
+
             return saved_event;
         } catch (error) {
             throw error;

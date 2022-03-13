@@ -28,6 +28,9 @@ import { IComment } from '../models/comment.model';
 import { MoonRepository } from '../models/moon/moon.repository';
 import { Response } from 'express';
 import { ConvoService } from '../convo.service';
+import { EventService } from '../services/event.service';
+import { EventTypes, IEvent, ITargetContent, TargetContentTypes } from '../models/event/event.model';
+import { IConvo } from '../models/convo/convo.model';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -45,6 +48,7 @@ export class CommentController {
     constructor(
         private readonly commentService: CommentService,
         private readonly convoService: ConvoService,
+        private readonly eventService: EventService,
     ) {}
     @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Post()
@@ -63,6 +67,23 @@ export class CommentController {
                 data.convo.toString(),
                 true,
             );
+
+            // Notification event
+            const convo:IConvo = await this.convoService.getById(data.convo.toString())
+
+            if(convo.user != data.user) {
+                const target_content: ITargetContent = {
+                    type:TargetContentTypes.convo,
+                    id: data.convo.toString()
+                }
+                const eventData: IEvent = {performer: data.user, 
+                    receiver: convo.user,
+                    event_type: EventTypes.comment,
+                    target_content: target_content,
+                    create_date:data.create_date}
+                await this.eventService.create(eventData)
+            }
+
             return saved_event;
         } catch (error) {
             throw error;

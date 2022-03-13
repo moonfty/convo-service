@@ -27,7 +27,10 @@ import {
     TransformInterceptor,
 } from './interceptors/transfrom.interceptor';
 import { IConvo } from './models/convo/convo.model';
+import { EventTypes, IEvent, ITargetContent, TargetContentTypes } from './models/event/event.model';
 import { MoonRepository } from './models/moon/moon.repository';
+import { EventService } from './services/event.service';
+import { FirebaseService } from './services/firebase.service';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -42,7 +45,9 @@ import { MoonRepository } from './models/moon/moon.repository';
 @ApiTags('convo')
 @Controller('convo')
 export class ConvoController {
-    constructor(private readonly convoService: ConvoService) {}
+    constructor(private readonly convoService: ConvoService,
+        private readonly eventService: EventService,
+        private readonly firebaseService: FirebaseService) {}
     @ApiResponse({ status: 200, type: ResponseFormatDto })
     @Post()
     async create(
@@ -56,8 +61,25 @@ export class ConvoController {
                 throw new ForbiddenException('Wrong Access Token');
             }
 
-            const saved_event = await this.convoService.create(data);
-            return saved_event;
+            const saved_convo = await this.convoService.create(data);
+
+            // Notification event
+            const convo:IConvo = await this.convoService.getById(saved_convo.id)
+            const target_content: ITargetContent = {
+                type:TargetContentTypes.convo,
+                id: saved_convo.id
+            }
+            const followers = await this.firebaseService.getFollowers(data.user)
+            for( var follower of followers) {
+                const eventData: IEvent = {performer: data.user, 
+                    receiver: follower,
+                    event_type: EventTypes.follow,
+                    target_content: target_content,
+                    create_date:data.create_date}
+                await this.eventService.create(eventData)
+            }
+
+            return saved_convo;
         } catch (error) {
             throw new BadRequestException(error.message);
         }

@@ -32,6 +32,8 @@ import MoonModel, { IMoon } from '../models/moon/moon.model';
 import { ConvoService } from '../convo.service';
 import { Response } from 'express';
 import ConvoModel from '../models/convo/convo.model';
+import { EventTypes, IEvent, ITargetContent, TargetContentTypes } from '../models/event/event.model';
+import { EventService } from '../services/event.service';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -50,6 +52,7 @@ export class MoonController {
         private readonly moonService: MoonService,
         private readonly commentService: CommentService,
         private readonly convoService: ConvoService,
+        private readonly eventService: EventService,
     ) {}
     @ApiResponse({ status: 201, type: ResponseFormatDto })
     @Post()
@@ -84,7 +87,22 @@ export class MoonController {
                         data.convo,
                         true,
                     );
+
+                    // Event Notification
+                    const target_content: ITargetContent = {
+                        type:TargetContentTypes.convo,
+                        id: data.convo
+                    }
+                    const eventData: IEvent = {performer: data.user, 
+                        receiver: updated_convo.user,
+                        event_type: EventTypes.moon,
+                        target_content: target_content,
+                        create_date:data.create_date}
+                        
+                    await this.eventService.create(eventData)
+
                     return saved_event;
+
                 }
             } else {
                 const commentdetail = await CommentModel.findOne({
@@ -102,11 +120,29 @@ export class MoonController {
                 });
                 if (!moondetail) {
                     const saved_event = await this.moonService.create(data);
-                    const updated_comment =
+                    const updated_comment:IComment =
                         await this.commentService.updateMoon(
                             data.comment,
                             true,
                         );
+
+                    // Event Notification
+                    const convodetail = await ConvoModel.findOne({
+                        _id: updated_comment.convo,
+                    });
+                    if(convodetail.user != updated_comment.user) {
+                        const target_content: ITargetContent = {
+                            type:TargetContentTypes.comment,
+                            id: data.comment
+                        }
+                        const eventData: IEvent = {performer: data.user, 
+                            receiver: updated_comment.user,
+                            event_type: EventTypes.moon,
+                            target_content: target_content,
+                            create_date:data.create_date}
+                        await this.eventService.create(eventData)
+
+                    }
                     return saved_event;
                 }
             }

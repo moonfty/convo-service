@@ -22,7 +22,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  //initializeApp();
   app.use(helmet());
   await app.listen(PORT);
 }
@@ -33,7 +32,7 @@ const connectToTheDatabase = async () => {
     await mongoose
       .connect(mongoDbConnectionString, {})
       .then((res) => {
-        console.log(res)
+        //console.log(res)
       })
       .catch((err) => {
         console.log(err);

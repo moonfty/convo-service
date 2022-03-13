@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { errorMessages } from '../errors/convo.errors';
+import EventModel, { IEvent } from '../models/event/event.model';
 import { MoonRepository } from '../models/moon/moon.repository';
 
 export interface IService {
@@ -24,7 +25,7 @@ export class Service implements IService {
 
     async create(data: any): Promise<any> {
         const created = new this.model(data);
-        const saved = await created.save();
+        const saved = await created.save();        
         return saved;
     }
 

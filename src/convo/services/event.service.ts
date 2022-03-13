@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { DeleteMoonDto } from '../dtos/moon.dto';
 import { Service } from '../interfaces/service.interface';
 
-import EventModel from '../models/event/event.model';
+import EventModel, { IEvent,EventTypes, TargetContentTypes } from '../models/event/event.model';
 
 @Injectable()
 export class EventService extends Service {
@@ -11,4 +11,7 @@ export class EventService extends Service {
         super(EventModel, '');
     }
 
-}
+    async getEventsOfUser(receiver: string):Promise<Array<IEvent>> {
+        const eventsOfUser = await EventModel.find({receiver: receiver})
+        return eventsOfUser
+    }}

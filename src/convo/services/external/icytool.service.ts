@@ -17,6 +17,7 @@ const graphqlQuery = {
               address
               ... on ERC721Contract {
                 name
+                symbol
                 stats {
                   totalSales
                   average
@@ -24,19 +25,21 @@ const graphqlQuery = {
                   floor
                   volume
                 }
-                symbol
+                unsafeOpenseaImageUrl
+                unsafeOpenseaSlug
               }
             }
           }
         }
       }`,
     "variables": {}
-};
+};  
 
 @Injectable()
 export class IcyToolService {
     async getTrendingCollections(): Promise<any> {
         const response = await axios.post(endpoint, graphqlQuery, {headers: headers})
-        return response
+        const collections = response.data['data'].contracts
+        return collections
     }
 }
