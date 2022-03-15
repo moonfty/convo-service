@@ -1,6 +1,5 @@
 import { Schema, model, ObjectId } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { Target } from 'googleapis-common';
 
 
 export enum EventTypes {
