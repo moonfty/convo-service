@@ -12,6 +12,8 @@ export class EventService extends Service {
     }
 
     async getEventsOfUser(receiver: string):Promise<Array<IEvent>> {
-        const eventsOfUser = await EventModel.find({receiver: receiver})
+        const eventsOfUser = await EventModel.find({receiver: receiver},
+            {},
+            { sort: { create_date: 'desc' } },)
         return eventsOfUser
     }}

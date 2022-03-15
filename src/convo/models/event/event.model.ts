@@ -13,6 +13,7 @@ export enum EventTypes {
 export enum TargetContentTypes {
     convo = 'convo',
     comment = 'comment',
+    gm = 'gm'
 }
 
 export interface ITargetContent {

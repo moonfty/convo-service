@@ -9,6 +9,7 @@ export class CreateEventDto {
 }   
 
 export class CreateGMEventDto {
+    id: string
     receiver: string;
     performer: string
     create_date: number

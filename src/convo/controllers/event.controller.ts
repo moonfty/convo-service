@@ -28,7 +28,7 @@ import { MoonRepository } from '../models/moon/moon.repository';
 import { Response } from 'express';
 import { CreateEventDto, CreateGMEventDto } from '../dtos/event.dto';
 import { EventService } from '../services/event.service';
-import { EventTypes, IEvent } from '../models/event/event.model';
+import { EventTypes, IEvent, ITargetContent, TargetContentTypes } from '../models/event/event.model';
 
 @ApiResponse({ status: 404, schema: NotFoundSwaggerSchema })
 @ApiResponse({
@@ -68,10 +68,16 @@ export class EventController {
         @Res({ passthrough: true }) response: Response,
     ): Promise<IEvent> {
         try {
-            const event_obj:IEvent = {receiver: data.receiver,
-                 performer: data.performer,
-                 create_date: data.create_date,
-                 event_type: EventTypes.gm
+            const target_content: ITargetContent = {
+                type:TargetContentTypes.gm,
+                id: data.id
+            }
+            const event_obj:IEvent = {
+                receiver: data.receiver,
+                performer: data.performer,
+                create_date: data.create_date,
+                event_type: EventTypes.gm,
+                target_content: target_content
             }
             const saved_event = this.eventService.create(event_obj)
             return saved_event;

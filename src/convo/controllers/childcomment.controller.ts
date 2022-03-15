@@ -69,8 +69,7 @@ export class ChildCommentController {
 
             // Notification event
             const comment:IComment = await this.commentService.getById(data.parent.toString())
-            const convo:IConvo = await this.convoService.getById(comment.convo.toString())
-            if(convo.user != data.user){
+            if(comment.user != data.user){
                 const target_content: ITargetContent = {
                     type:TargetContentTypes.comment,
                     id: data.parent.toString()

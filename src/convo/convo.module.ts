@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ChildCommentController } from './controllers/childcomment.controller';
 import { CommentController } from './controllers/comment.controller';
+import { EventController } from './controllers/event.controller';
 import { TrendsController } from './controllers/external/trends.controller';
 import { MoonController } from './controllers/moon.controller';
 import { ConvoController } from './convo.controller';
@@ -32,6 +33,7 @@ import { MoonService } from './services/moon.service';
         ChildCommentController,
         MoonController,
         TrendsController,
+        EventController,
     ],
 })
 export class ConvoModule {}
